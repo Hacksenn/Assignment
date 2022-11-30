@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Comments = require("../schemas/comment.js");
 
 // 댓글 목록 조회 API
-router.get("/comments", async (req, res) => {
+router.get("/", async (req, res) => {
   const comments = await Comments.find().sort({
     createdAt: "desc",
   });
@@ -24,9 +24,8 @@ router.get("/comments", async (req, res) => {
 
 // 댓글 작성 API
 
-router.post("/comments/", async (req, res) => {
-  const { commentId, user, password, content } = req.body;
-
+router.post("/", async (req, res) => {
+  const { user, password, content } = req.body;
   if (!user || !password) {
     return res.status(400).send({
       message: "데이터 형식이 올바르지 않습니다.",
@@ -38,13 +37,13 @@ router.post("/comments/", async (req, res) => {
     });
   }
 
-  await Comments.create({ commentId, user, password, content });
+  await Comments.create({ user, password, content });
 
-  res.json({ message: "댓글을 생성하였습니다." });
+  res.status(201).json({ message: "댓글을 생성하였습니다." });
 });
 
 // 댓글 수정 API
-router.patch("/comments/:commentId", async (req, res) => {
+router.patch("/:commentId", async (req, res) => {
   const { commentId } = req.params;
   const { content, password } = req.body;
 
@@ -68,7 +67,7 @@ router.patch("/comments/:commentId", async (req, res) => {
 });
 
 // 댓글 삭제 API
-router.delete("/comments/:commentId", async (req, res) => {
+router.delete("/:commentId", async (req, res) => {
   const { commentId } = req.params;
   const { password } = req.body;
 
@@ -82,7 +81,7 @@ router.delete("/comments/:commentId", async (req, res) => {
   if (existsComments.length === 0) {
     return res.status(404).json({ message: "댓글 조회에 실패하였습니다." });
   }
-  res.json({ result: "success" });
+  res.status(204).json({ result: "success" });
 });
 
 module.exports = router;
