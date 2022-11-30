@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const Comments = require("../schemas/comment");
 // 댓글 목록 조회 API
 router.get("/comments", async (req, res) => {
   const comments = await Comments.find().sort({

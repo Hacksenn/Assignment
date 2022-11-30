@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Posts = require("../schemas/posts");
 
 // 게시글 목록 조회 API
 router.get("/posts", async (req, res) => {
