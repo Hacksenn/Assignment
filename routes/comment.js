@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Comments = require("../schemas/comment");
+const Comments = require("../schemas/comment.js");
+
 // 댓글 목록 조회 API
 router.get("/comments", async (req, res) => {
   const comments = await Comments.find().sort({
@@ -23,7 +24,7 @@ router.get("/comments", async (req, res) => {
 });
 
 // 댓글 작성 API
-const Comments = require("../schemas/comment.js");
+
 router.post("/comments/", async (req, res) => {
   const { commentId, user, password, content } = req.body;
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Posts = require("../schemas/posts");
+const Posts = require("../schemas/posts.js");
 
 // 게시글 목록 조회 API
 router.get("/posts", async (req, res) => {
@@ -38,7 +38,7 @@ router.get("/posts/:_postId", async (req, res) => {
 });
 
 // 게시글 작성 API
-const Posts = require("../schemas/posts.js");
+
 router.post("/posts/", async (req, res) => {
   const { post_id, user, password, title, content } = req.body;
 
