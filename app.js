@@ -2,13 +2,12 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-const postsRouter = require("./routes/posts");
-const commentsRouter = require("./routes/comment");
+const router = require("./routes");
 const connect = require("./schemas");
 connect();
 
 app.use(express.json());
-app.use("/api", [postsRouter, commentsRouter]);
+app.use("/api", router);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

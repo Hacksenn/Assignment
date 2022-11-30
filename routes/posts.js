@@ -1,9 +1,8 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const Posts = require("../schemas/posts.js");
 
 // 게시글 목록 조회 API
-router.get("/posts", async (req, res) => {
+router.get("/", async (req, res) => {
   const posts = await Posts.find().sort({
     createdAt: "desc",
   });
@@ -19,7 +18,7 @@ router.get("/posts", async (req, res) => {
 });
 
 // 게시글 상세 조회 API
-router.get("/posts/:_postId", async (req, res) => {
+router.get("/:_postId", async (req, res) => {
   const { _postId } = req.params;
   const [posts] = await Posts.find({ post_id: _postId });
   if (!posts) {
@@ -39,7 +38,7 @@ router.get("/posts/:_postId", async (req, res) => {
 
 // 게시글 작성 API
 
-router.post("/posts/", async (req, res) => {
+router.post("/", async (req, res) => {
   const { post_id, user, password, title, content } = req.body;
 
   if (!user || !password || !title || !content) {
@@ -50,46 +49,43 @@ router.post("/posts/", async (req, res) => {
 
   await Posts.create({ post_id, user, password, title, content });
 
-  res.json({ message: "게시글을 생성하였습니다." });
+  res.status(201).json({ message: "게시글을 생성하였습니다." });
 });
 
 // 게시글 수정 API
-router.patch("/posts/:post_id", async (req, res) => {
+router.patch("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { title, content, password } = req.body;
-  const existsPosts = await Posts.find({
+  const [existsPosts] = await Posts.find({
     post_id: post_id,
     password: password,
   });
-  console.log(existsPosts);
-  if (existsPosts.length) {
+  if (existsPosts) {
     await Posts.updateOne(
       { post_id: post_id },
       { $set: { title: title, content: content } }
     );
     res.status(200).json({ success: true });
-  }
-  if (existsPosts.length === 0) {
-    return res.status(404).json({ message: "게시글 조회에 실패하였습니다." });
+  } else {
+    return res.status(404).json({ message: "게시글 수정이 실패하였습니다." });
   }
 });
 
 // 게시글 삭제 API
-router.delete("/posts/:post_id", async (req, res) => {
+router.delete("/:post_id", async (req, res) => {
   const { post_id } = req.params;
   const { password } = req.body;
 
-  const existsPosts = await Posts.find({
+  const [existsPosts] = await Posts.find({
     post_id: post_id,
     password: password,
   });
-  if (existsPosts.length) {
+  console.log(existsPosts);
+  if (existsPosts) {
     await Posts.deleteOne({ post_id });
-    res.json({ result: "success" });
-  }
-
-  if (existsPosts.length === 0) {
-    return res.status(404).json({ message: "게시글 조회에 실패하였습니다." });
+    res.status(204).json({ result: "success" });
+  } else {
+    return res.status(404).json({ message: "게시글 삭제에 실패하였습니다." });
   }
 });
 

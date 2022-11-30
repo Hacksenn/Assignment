@@ -1,5 +1,4 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const Comments = require("../schemas/comment.js");
 
 // 댓글 목록 조회 API
